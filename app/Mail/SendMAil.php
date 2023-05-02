@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 class SendMAil extends Mailable
 {
     use Queueable, SerializesModels;
-    private $data = [];
+    private array $data = [];
 
     /**
      * Create a new message instance.
@@ -28,7 +28,7 @@ class SendMAil extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Send M Ail',
+            subject: 'Welcome to Quiz-app',
         );
     }
 

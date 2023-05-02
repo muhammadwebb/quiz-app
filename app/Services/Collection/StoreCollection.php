@@ -2,7 +2,6 @@
 
 namespace App\Services\Collection;
 
-use App\Models\Category;
 use App\Models\Collection;
 use App\Services\BaseService;
 use Illuminate\Support\Str;

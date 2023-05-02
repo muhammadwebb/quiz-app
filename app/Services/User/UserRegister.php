@@ -3,10 +3,9 @@
 namespace App\Services\User;
 
 use App\Mail\SendMAil;
-use App\Models\Category;
 use App\Models\User;
+use App\Models\VerifyUser;
 use App\Services\BaseService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
@@ -28,24 +27,34 @@ class UserRegister extends BaseService
     public function execute(array $data): array
     {
         $this->validate($data);
-        $date = date('Y-m-d H:i:s');
 
         $user = User::create([
             'name'=> $data['name'],
             'phone'=> $data['phone'],
             'email'=> $data['email'],
             'password'=> $data['password'],
-            'email_verified_at'=> $date,
             'is_admin'=> false,
+            'is_premium'=> false,
+            'verified'=> false
+        ]);
+        $token = $user->createToken('user model', ['user'])->plainTextToken;
+
+
+        $code = rand(1111, 9999);
+        $verifyUser = VerifyUser::create([
+            'user_id'=> $user['id'],
+            'code'=> $code
         ]);
 
 
-        Mail::to($data['email'])->send(
+        Mail::to($user->email)->send(
             new SendMAil([
-                'name'=>'Muhammad',
+                'name'=>$user->name,
+                'email'=> $user->email,
+                'code'=> $code
             ])
         );
-        $token = $user->createToken('user model', ['user'])->plainTextToken;
+
         return [$user, $token];
     }
 }

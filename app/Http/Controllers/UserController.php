@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\User\EmailVerify;
 use App\Services\User\UserLogin;
 use App\Services\User\UserRegister;
 use Illuminate\Http\Request;
@@ -21,6 +22,40 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+//    public function send( $code)
+//    {
+//        try {
+//            $code = app(EmailVerify::class)->execute($code);
+//            return response([
+//                'data'=> [
+//                    'code'=> $code
+//                ]
+//            ]);
+//        }catch (ValidationException $exception){
+//            return response([
+//                'errors'=> $exception->validator->errors()->all()
+//            ], 422);
+//        }
+//    }
+
+    public function send(Request $request)
+    {
+        try {
+            $code = app(EmailVerify::class)->execute($request->all());
+            return response([
+                'data'=> [
+                    'code'=> $request
+                ]
+            ]);
+        }catch (ValidationException $exception){
+            return response([
+                'errors'=> $exception->validator->errors()->all()
+            ], 422);
+        }
+    }
+
+
     public function register(Request $request)
     {
         try {
@@ -70,7 +105,6 @@ class UserController extends Controller
      */
     public function show()
     {
-//        return $request->user();
         $user = Auth::user();
         return response([
             'id' => $user->id,

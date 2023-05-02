@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @mixin IdeHelperUser
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -24,8 +28,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'phone',
         'password',
+        'email',
         'is_premium',
         'is_admin',
+        'verified'
     ];
 
     /**
@@ -67,5 +73,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             get: fn() => $this->name.' '.$this->phone,
         );
+    }
+    public function collections(): HasMany
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+    public function verifyUser(): HasOne
+    {
+        return $this->hasOne(VerifyUser::class);
     }
 }

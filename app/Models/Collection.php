@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @mixin Eloquent
+ * @mixin IdeHelperCollection
+ */
 class Collection extends Model
 {
     use HasFactory;
@@ -18,19 +25,28 @@ class Collection extends Model
         'allowed_type',
     ];
 
-    public function questions():HasMany
+    public function questions(): HasMany
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Question::class)->with('answers');
     }
 
-    public function allowed_users():HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(Allowed_User::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function resulte():HasMany
+    public function scopeSearch(Builder $builder, $search)
     {
-        return $this->hasMany(Result::class);
+        $builder->where('name', 'like', "%{$search}%")
+            ->OrWhere('description', 'like', "%{$search}%");
+    }
+
+    public function allowedUsers()
+    {
+        $this->belongsToMany(
+            related: User::class,
+            table: 'allowed_users',
+        );
     }
 
 }
