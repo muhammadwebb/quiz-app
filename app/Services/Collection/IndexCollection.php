@@ -4,18 +4,26 @@ namespace App\Services\Collection;
 
 use App\Models\Collection;
 use App\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection as TypeCollection;
+use Illuminate\Validation\ValidationException;
 
 
 class IndexCollection extends BaseService
 {
     public function rules(): array
     {
-        return [];
+        return [
+            'search'=> 'nullable'
+        ];
     }
 
-    public function execute(array $data): TypeCollection
+    /**
+     * @throws ValidationException
+     */
+    public function execute(array $data)
     {
-        return Collection::all(['id', 'category_id', 'user_id', 'name', 'description', 'allowed_type', 'code', 'created_at', 'updated_at']);
+        $this->validate($data);
+        return Collection::with('user')->when($data['search'] ?? null, function ($query, $search){
+            $query->search($search);
+        })->paginate(10);
     }
 }

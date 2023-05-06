@@ -8,12 +8,15 @@ use App\Services\Collection\IndexCollection;
 use App\Services\Collection\ShowCollection;
 use App\Services\Collection\StoreCollection;
 use App\Services\Collection\UpdateCollection;
+use App\Traits\JsonRespondController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class CollectionController extends Controller
 {
+    use JsonRespondController;
     public function index(Request $request)
     {
         $collect = app(IndexCollection::class)->execute($request->all());
@@ -23,13 +26,13 @@ class CollectionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
-            $collection = app(StoreCollection::class)->execute($request->all());
-            return new CollectResource($collection);
-        }catch (ValidationException $exception){
-            return $exception->validator->errors()->all();
+            app(StoreCollection::class)->execute($request->all());
+            return $this->respondSuccess();
+        } catch (ValidationException $exception) {
+            return $this->respondValidatorFailed($exception->validator);
         }
     }
 
@@ -76,7 +79,7 @@ class CollectionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id):string
     {
         try {
             $collect = app(DestroyCollection::class)->execute([

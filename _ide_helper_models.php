@@ -14,7 +14,6 @@ namespace App\Models{
 /**
  * App\Models\Allowed_User
  *
- * @mixin IdeHelperAllowed_User
  * @property int $id
  * @property int $user_id
  * @property int $collect_id
@@ -28,15 +27,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Allowed_User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Allowed_User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Allowed_User whereUserId($value)
+ * @mixin \Eloquent
  */
-	class Allowed_User extends \Eloquent {}
+	class IdeHelperAllowed_User {}
 }
 
 namespace App\Models{
 /**
  * App\Models\Answer
  *
- * @mixin IdeHelperAnswer
  * @property int $id
  * @property int $question_id
  * @property string $answer
@@ -52,15 +51,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Answer whereIsCorrect($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Answer whereQuestionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Answer whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
-	class Answer extends \Eloquent {}
+	class IdeHelperAnswer {}
 }
 
 namespace App\Models{
 /**
  * App\Models\Category
  *
- * @mixin IdeHelperCategory
  * @property int $id
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -77,8 +76,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Category withoutTrashed()
+ * @mixin \Eloquent
  */
-	class Category extends \Eloquent {}
+	class IdeHelperCategory {}
 }
 
 namespace App\Models{
@@ -86,7 +86,6 @@ namespace App\Models{
  * App\Models\Collection
  *
  * @mixin Eloquent
- * @mixin IdeHelperCollection
  * @property int $id
  * @property int $category_id
  * @property int $user_id
@@ -114,15 +113,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereUserId($value)
+ * @mixin \Eloquent
  */
-	class Collection extends \Eloquent {}
+	class IdeHelperCollection {}
 }
 
 namespace App\Models{
 /**
  * App\Models\Question
  *
- * @mixin IdeHelperQuestion
  * @property int $id
  * @property int $collection_id
  * @property string $question
@@ -140,15 +139,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereQuestion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Question whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
-	class Question extends \Eloquent {}
+	class IdeHelperQuestion {}
 }
 
 namespace App\Models{
 /**
  * App\Models\Result
  *
- * @mixin IdeHelperResult
  * @property int $id
  * @property int $collection_id
  * @property int $question_id
@@ -168,15 +167,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Result whereQuestionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Result whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Result whereUserId($value)
+ * @mixin \Eloquent
  */
-	class Result extends \Eloquent {}
+	class IdeHelperResult {}
 }
 
 namespace App\Models{
 /**
  * App\Models\User
  *
- * @mixin IdeHelperUser
  * @property int $id
  * @property string $name
  * @property string $phone
@@ -212,8 +211,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereVerified($value)
+ * @mixin \Eloquent
  */
-	class User extends \Eloquent implements \Illuminate\Contracts\Auth\MustVerifyEmail {}
+	class IdeHelperUser {}
 }
 
 namespace App\Models{
@@ -234,7 +234,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|VerifyUser whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VerifyUser whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|VerifyUser whereUserId($value)
+ * @mixin \Eloquent
  */
-	class VerifyUser extends \Eloquent {}
+	class IdeHelperVerifyUser {}
 }
 

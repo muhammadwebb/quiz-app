@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('123'),
                 'is_premium' => true,
                 'is_admin' => true,
-                'verified'=> true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -31,7 +30,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('123'),
                 'is_premium' => true,
                 'is_admin' => true,
-                'verified'=> true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -41,7 +39,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('123'),
                 'is_premium' => true,
                 'is_admin' => true,
-                'verified'=> true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

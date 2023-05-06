@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,10 +15,10 @@ return new class extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignIdFor(User::class)->constrained('users');
             $table->string('name')->index();
             $table->longText('description');
-            $table->string('code', 32)->unique();
+            $table->uuid('code')->unique();
             $table->enum('allowed_type', ['public', 'url']);
             $table->softDeletes();
             $table->timestamps();

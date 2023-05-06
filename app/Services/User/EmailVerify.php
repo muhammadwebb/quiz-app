@@ -18,20 +18,22 @@ class EmailVerify extends BaseService
     /**
      * @throws ValidationException
      */
-    public function execute(array $data): array
+    public function execute($data): array
     {
         $this->validate($data);
 
         $code = $data['code'];
         $user_verify = VerifyUser::where('code', $code)->first();
+        $date = $user_verify->created_at;
         if(isset($user_verify)){
             $user = $user_verify->user;
             if (!$user->verified){
-                $user_verify->user->verified = 1;
+                $user_verify->user->is_admin = true;
+                $user_verify->user->is_premium = true;
+                $user_verify->user->email_verified_at = now();
                 $user_verify->user->save();
             }
         }
-
         return ['Your e-mail is verified'];
     }
 }

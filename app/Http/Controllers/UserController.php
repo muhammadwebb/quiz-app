@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Services\User\EmailVerify;
 use App\Services\User\UserLogin;
 use App\Services\User\UserRegister;
+use App\Traits\JsonRespondController;
+use Eloquent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
+    use JsonRespondController;
     /**
      * Display a listing of the resource.
      */
@@ -20,16 +23,31 @@ class UserController extends Controller
     }
 
     /**
+     * @mixin Eloquent
      * Store a newly created resource in storage.
      */
 
-//    public function send( $code)
+    public function send( $code)
+    {
+        try {
+            $code = app(EmailVerify::class)->execute(['code'=> $code]);
+            return response([
+                'code'=> $code,
+                ]);
+        }catch (ValidationException $exception){
+            return response([
+                'errors'=> $exception->validator->errors()->all()
+            ], 422);
+        }
+    }
+
+//    public function send(Request $request)
 //    {
 //        try {
-//            $code = app(EmailVerify::class)->execute($code);
+//            $code = app(EmailVerify::class)->execute($request->all());
 //            return response([
 //                'data'=> [
-//                    'code'=> $code
+//                    'code'=> $request
 //                ]
 //            ]);
 //        }catch (ValidationException $exception){
@@ -38,22 +56,6 @@ class UserController extends Controller
 //            ], 422);
 //        }
 //    }
-
-    public function send(Request $request)
-    {
-        try {
-            $code = app(EmailVerify::class)->execute($request->all());
-            return response([
-                'data'=> [
-                    'code'=> $request
-                ]
-            ]);
-        }catch (ValidationException $exception){
-            return response([
-                'errors'=> $exception->validator->errors()->all()
-            ], 422);
-        }
-    }
 
 
     public function register(Request $request)

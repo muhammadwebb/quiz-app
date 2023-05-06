@@ -35,7 +35,6 @@ class UserRegister extends BaseService
             'password'=> $data['password'],
             'is_admin'=> false,
             'is_premium'=> false,
-            'verified'=> false
         ]);
         $token = $user->createToken('user model', ['user'])->plainTextToken;
 

@@ -20,9 +20,11 @@ class ShowCollection extends BaseService
      * @throws ModelNotFoundException
      * @throws ValidationException
      */
-    public function execute(array $data): Collection
+    public function execute(array $data): array
     {
         $this->validate($data);
-        return Collection::where('id', $data['id'])->first();
+        $collection = Collection::findOrFail($data['id']);
+        $question = $collection->questions;
+        return [$collection, $question];
     }
 }

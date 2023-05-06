@@ -2,7 +2,6 @@
 
 namespace App\Services\User;
 
-use App\Models\Category;
 use App\Models\User;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,6 +20,7 @@ class UserLogin extends BaseService
 
     /**
      * @throws ValidationException
+     * @throws \Exception
      */
     public function execute(array $data): array
     {
