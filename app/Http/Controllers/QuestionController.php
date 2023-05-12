@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Question\QuestionResource;
+use App\Services\Question\IndexQuestion;
+use App\Services\Question\StoreQuestion;
 use App\Traits\JsonRespondController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class QuestionController extends Controller
 {
@@ -11,7 +16,7 @@ class QuestionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
     }
@@ -21,7 +26,12 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $question = app(StoreQuestion::class)->execute($request->all());
+            return $this->respondSuccess();
+        }catch (ValidationException $exception) {
+            return $this->respondValidatorFailed($exception->validator);
+        }
     }
 
     /**

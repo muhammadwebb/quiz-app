@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Collect\CollectionCollection;
+use App\Http\Resources\Collect\CollectionWithQuestionsResource;
 use App\Http\Resources\Collect\CollectResource;
 use App\Services\Collection\DestroyCollection;
 use App\Services\Collection\IndexCollection;
@@ -13,19 +15,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Exception;
 
 class CollectionController extends Controller
 {
     use JsonRespondController;
+
     public function index(Request $request)
     {
         $collect = app(IndexCollection::class)->execute($request->all());
-        return CollectResource::collection($collect);
+        return new CollectionCollection($collect);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request): JsonResponse
     {
         try {
@@ -36,24 +37,21 @@ class CollectionController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         try {
-            $collect = app(ShowCollection::class)->execute([
+            [$collection, $questions] = app(ShowCollection::class)->execute([
                 'id'=> $id
             ]);
-            return new CollectResource($collect);
+            return (new CollectionWithQuestionsResource($collection))->setQuestions($questions);
+        }catch (ValidationException $exception){
+            return $this->respondValidatorFailed($exception->validator);
         }catch (ModelNotFoundException){
-            return response([
-                'error'=> 'collection not found'
-            ], 404);
-        }catch (ValidationException $e){
-            return response([
-                'errors'=> $e->validator->errors()->all()
-            ], 422);
+            return $this->respondNotFound();
+        }catch (Exception $exception){
+            $this->setHTTPStatusCode($exception->getCode());
+            return $this->respondWithError($exception->getMessage());
         }
     }
 

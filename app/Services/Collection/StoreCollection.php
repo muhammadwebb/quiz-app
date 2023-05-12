@@ -12,6 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class StoreCollection extends BaseService
 {
+    private array $answers;
     public function rules(): array
     {
         return [
@@ -43,26 +44,27 @@ class StoreCollection extends BaseService
             'allowed_type' => $data['allowed_type'],
         ]);
 
-        foreach ($data['questions'] as $question) {
-            $answers = collect($question['answers']);
-            $question = Question::create([
-                'collection_id'=> $collection->id,
-                'question'=> $question['question'],
-                'correct_answers'=> $answers->where('is_correct', true)->count()
-            ]);
+        if (isset($data['questions'])){
+            foreach ($data['questions'] as $question) {
+                $answers = collect($question['answers']);
+                $question = Question::create([
+                    'collection_id'=> $collection->id,
+                    'question'=> $question['question'],
+                    'correct_answers'=> $answers->where('is_correct', true)->count()
+                ]);
 
-            foreach ($answers as $answer) {
-                $this->answers[] =[
-                  'question_id'=> $question->id,
-                  'answer'=> $answer['answer'],
-                    'is_correct'=> $answer['is_correct']
-                ];
+                foreach ($answers as $answer) {
+                    $this->answers[] =[
+                      'question_id'=> $question->id,
+                      'answer'=> $answer['answer'],
+                        'is_correct'=> $answer['is_correct']
+                    ];
+                }
+
+                DB::table('answers')->insert($this->answers);
+                $this->answers = [];
             }
-
-            DB::table('answers')->insert($this->answers);
-            $this->answers = [];
         }
-
         return true;
     }
 }
