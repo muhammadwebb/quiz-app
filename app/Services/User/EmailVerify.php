@@ -28,8 +28,8 @@ class EmailVerify extends BaseService
         if(isset($user_verify)){
             $user = $user_verify->user;
             if (!$user->verified){
-                $user_verify->user->is_admin = true;
-                $user_verify->user->is_premium = true;
+//                $user_verify->user->is_admin = true;
+//                $user_verify->user->is_premium = true;
                 $user_verify->user->email_verified_at = now();
                 $user_verify->user->save();
             }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('collection_id')->constrained();
             $table->text('question');
             $table->unsignedBigInteger('correct_answers')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

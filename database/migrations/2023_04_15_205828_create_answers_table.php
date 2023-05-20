@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('question_id')->constrained();
             $table->string('answer');
             $table->boolean('is_correct');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

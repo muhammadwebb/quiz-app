@@ -2,19 +2,19 @@
 
 namespace App\Services\Question;
 
-use App\Models\Answer;
 use App\Models\Question;
 use App\Services\BaseService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
-class StoreQuestion extends BaseService
+class UpdateQuestion extends BaseService
 {
     private array $answers;
+
     public function rules(): array
     {
         return [
-            'collection_id'=> 'required',
+            'id'=> 'required|exists:questions,id',
             'question'=> 'required',
             'answers'=> 'nullable|array',
             'answers.*.answer'=> 'required_unless:answers,null',
@@ -25,18 +25,17 @@ class StoreQuestion extends BaseService
     /**
      * @throws ValidationException
      */
-    public function execute(array $data): bool
+    public function execute(array $data): string
     {
         $this->validate($data);
-
         $answers = collect($data['answers']);
-        $question = Question::create([
-            'collection_id'=> $data['collection_id'],
+        $question = Question::find($data['id']);
+        $question->update([
             'question'=> $data['question'],
             'correct_answers'=> $answers->where('is_correct', true)->count()
         ]);
 
-        foreach ($data['answers'] as $answer){
+        foreach ($answers as $answer){
             $this->answers [] = [
                 'question_id'=> $question->id,
                 'answer'=> $answer['answer'],
@@ -45,7 +44,7 @@ class StoreQuestion extends BaseService
         }
         DB::table('answers')->insert($this->answers);
         $this->answers = [];
-
         return true;
+
     }
 }

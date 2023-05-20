@@ -32,6 +32,6 @@ Route::middleware(['auth:sanctum', 'abilities:admin'])->prefix('/collections')->
 
 Route::middleware(['auth:sanctum', 'abilities:admin'])->prefix('/question')->group(function (){
         Route::post('/', [QuestionController::class, 'store']);
-        Route::get('/', [QuestionController::class, 'index']);
-        Route::get('/{id}', [QuestionController::class, 'show']);
+        Route::post('/update/{id}', [QuestionController::class, 'update']);
+        Route::delete('/delete/{id}', [QuestionController::class, 'destroy']);
     });

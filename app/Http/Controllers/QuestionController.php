@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Question\QuestionResource;
-use App\Services\Question\IndexQuestion;
+use App\Services\Question\DeleteQuestion;
 use App\Services\Question\StoreQuestion;
+use App\Services\Question\UpdateQuestion;
 use App\Traits\JsonRespondController;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -24,12 +23,12 @@ class QuestionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): string
     {
         try {
             $question = app(StoreQuestion::class)->execute($request->all());
             return $this->respondSuccess();
-        }catch (ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return $this->respondValidatorFailed($exception->validator);
         }
     }
@@ -45,16 +44,33 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id):string
     {
-        //
+        try {
+            app(UpdateQuestion::class)->execute([
+                'id'=> $id,
+                'question'=> $request->question,
+                'answers'=>$request->answers
+            ]);
+            return $this->respondSuccess();
+        }catch (ValidationException $exception) {
+            return $this->respondValidatorFailed($exception->validator);
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): string
     {
-        //
+        try {
+            app(DeleteQuestion::class)->execute([
+                'id'=> $id
+            ]);
+            return $this->respondSuccess();
+        }catch (ValidationException $exception) {
+            return $this->respondValidatorFailed($exception->validator);
+        }
     }
 }
