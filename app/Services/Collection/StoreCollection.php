@@ -2,6 +2,7 @@
 
 namespace App\Services\Collection;
 
+use App\Models\Allowed_User;
 use App\Models\Collection;
 use App\Models\Question;
 use App\Services\BaseService;
@@ -42,6 +43,10 @@ class StoreCollection extends BaseService
             'description' => $data['description'],
             'code' => Str::uuid(),
             'allowed_type' => $data['allowed_type'],
+        ]);
+        Allowed_User::create([
+            'user_id'=> $collection->user_id,
+            'collect_id'=> $collection->id
         ]);
 
         if (isset($data['questions'])){

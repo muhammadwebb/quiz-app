@@ -11,5 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 class Allowed_User extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'user_id',
+        'collect_id'
+    ];
+
 
 }
