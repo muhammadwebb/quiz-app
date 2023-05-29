@@ -30,19 +30,24 @@ class UpdateQuestion extends BaseService
         $this->validate($data);
         $answers = collect($data['answers']);
         $question = Question::find($data['id']);
+        $oldAnswers = $question->answers->pluck('answer');
         $question->update([
             'question'=> $data['question'],
             'correct_answers'=> $answers->where('is_correct', true)->count()
         ]);
 
         foreach ($answers as $answer){
-            $this->answers [] = [
-                'question_id'=> $question->id,
-                'answer'=> $answer['answer'],
-                'is_correct'=> $answer['is_correct'],
-            ];
+            if (!in_array($answer['answer'], $oldAnswers)){
+                $this->answers [] = [
+                    'question_id'=> $question->id,
+                    'answer'=> $answer['answer'],
+                    'is_correct'=> $answer['is_correct'],
+                ];
+            }
         }
-        DB::table('answers')->insert($this->answers);
+        if (!empty($this->answers)){
+            DB::table('answers')->insert($this->answers);
+        }
         $this->answers = [];
         return true;
 
